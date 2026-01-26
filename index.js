@@ -88,10 +88,11 @@ form.addEventListener('submit', e => {
 });
 
 //83a838ce176143d3abd4a68d0c3e2cd2
+//481ede7b0413473b950dc233ce4f694f
 
 const getCountryCodeByIp =  async () => {
     try {
-        const response = await fetch('https://api.geoapify.com/v1/ipinfo?apiKey=83a838ce176143d3abd4a68d0c3e2cd2')
+        const response = await fetch('https://api.geoapify.com/v1/ipinfo?apiKey=481ede7b0413473b950dc233ce4f694f')
         console.log(response);
 
          const data = await response.json();
@@ -112,15 +113,26 @@ const getCountryCodeByIp =  async () => {
 }
 
 const changeCountryByIp = async () => {
-        const countryCode = await getCountryCodeByIp();
-        //console.log(countryCode)
-        const optionToSelect = [...inputCountries.children].find(option => option.dataset.countrycode === countryCode);
-        //console.log(optionSelect);
+    const countryCode = await getCountryCodeByIp();
+    const optionToSelect = [...inputCountries.children].find(option => option.dataset.countrycode === countryCode);
+    
+    // Es buena práctica verificar si optionToSelect existe antes de usarlo
+    if (optionToSelect) {
+
         optionToSelect.selected = true;
         spanCode.innerHTML = `+${optionToSelect.value}`; 
         spanCode.classList.add(`correct`);
         inputCountries.classList.add(`correct`);
         
+        
+        // 1. Forzamos la variable a true porque sabemos que la API seleccionó un país válido
+        countryValidation = true; 
+        
+        // 2. Llamamos a validación para que verifique si el botón ya puede habilitarse
+        validation(inputCountries, true); 
+        // --------------------
+    }
+
     }
 
 changeCountryByIp();
